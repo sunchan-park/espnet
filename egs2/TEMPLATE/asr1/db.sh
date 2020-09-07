@@ -79,7 +79,7 @@ else
     CSMSC=downloads
     HKUST1=
     HKUST2=
-    LIBRISPEECH=
+    LIBRISPEECH=/home/htk/Database
     LJSPEECH=downloads
     JSUT=downloads
     TIMIT=

@@ -31,8 +31,8 @@ skip_eval=false      # Skip decoding and evaluation stages
 skip_upload=true     # Skip packing and uploading stages
 ngpu=1               # The number of gpus ("0" uses cpu, otherwise use gpu).
 num_nodes=1          # The number of nodes
-nj=32                # The number of parallel jobs.
-inference_nj=32      # The number of parallel jobs in decoding.
+nj=12                # The number of parallel jobs.
+inference_nj=12      # The number of parallel jobs in decoding.
 gpu_inference=false  # Whether to perform gpu decoding.
 dumpdir=dump         # Directory to dump features.
 expdir=exp           # Directory to save experiments.
@@ -58,7 +58,7 @@ bpemode=unigram     # Mode of BPE (unigram or bpe).
 oov="<unk>"         # Out of vocabulary symbol.
 blank="<blank>"     # CTC blank symbol
 sos_eos="<sos/eos>" # sos and eos symbole
-bpe_input_sentence_size=100000000 # Size of input sentence for BPE.
+bpe_input_sentence_size=10000000 # Size of input sentence for BPE.
 bpe_nlsyms=         # non-linguistic symbols list, separated by a comma, for BPE
 bpe_char_cover=1.0  # character coverage when modeling BPE
 
@@ -70,7 +70,7 @@ lm_config=        # Config for language model training.
 lm_args=          # Arguments for language model training, e.g., "--max_epoch 10".
                   # Note that it will overwrite args in lm config.
 use_word_lm=false # Whether to use word language model.
-num_splits_lm=1   # Number of splitting for lm corpus
+num_splits_lm=4   # Number of splitting for lm corpus
 # shellcheck disable=SC2034
 word_vocab_size=10000 # Size of word vocabulary.
 
@@ -543,6 +543,7 @@ if ! "${skip_data_prep}"; then
                 --model_prefix="${bpeprefix}" \
                 --character_coverage=${bpe_char_cover} \
                 --input_sentence_size="${bpe_input_sentence_size}" \
+                --shuffle_input_sentence=true \
                 ${_opts_spm}
 
             _opts="--bpemodel ${bpemodel}"
@@ -735,6 +736,7 @@ if ! "${skip_train}"; then
                     --ngpu "${ngpu}" \
                     --use_preprocessor true \
                     --bpemodel "${bpemodel}" \
+                    --batch_size 100 \
                     --token_type "${lm_token_type}"\
                     --token_list "${lm_token_list}" \
                     --non_linguistic_symbols "${nlsyms_txt}" \
@@ -961,6 +963,7 @@ if ! "${skip_train}"; then
                 --bpemodel "${bpemodel}" \
                 --token_type "${token_type}" \
                 --token_list "${token_list}" \
+                --batch_bins 8000000 \
                 --non_linguistic_symbols "${nlsyms_txt}" \
                 --cleaner "${cleaner}" \
                 --g2p "${g2p}" \
