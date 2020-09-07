@@ -1196,6 +1196,11 @@ if ! "${skip_eval}"; then
 
                 log "Write ${_type} result in ${_scoredir}/result.txt"
                 grep -e Avg -e SPKR -m 2 "${_scoredir}/result.txt"
+
+                if [ "${_type}" = wer ]; then
+                    scripts/utils/send_asr_result.sh "${asr_exp}/${inference_tag}" "${dset}"
+                fi
+
             done
 
         done

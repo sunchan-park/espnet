@@ -14,6 +14,7 @@ source $MAIN_ROOT/tools/venv/etc/profile.d/conda.sh
 conda activate base
 set -u
 
+pip install python-telegram-bot
 pip install numba==0.48.0
 python -m nltk.downloader "averaged_perceptron_tagger" "cmudict"
 
